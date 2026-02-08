@@ -219,4 +219,100 @@
     </script>
 </body>
           </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZenSheet Pro | Desktop Power on Mobile</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #2ecc71; --bg: #0f0f0f; --surface: #1e1e1e;
+            --text: #ffffff; --border: #333; --accent: #3498db;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { margin: 0; font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* AI TOP BAR */
+        #ai-header { padding: 10px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        #ai-input { flex: 1; background: #2a2a2a; border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: white; font-size: 14px; }
+
+        /* MAIN NAVIGATION (TABS) */
+        #menu-tabs { display: flex; background: #181818; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+        .tab { padding: 12px 20px; font-size: 12px; font-weight: bold; color: #888; cursor: pointer; text-transform: uppercase; border-bottom: 2px solid transparent; }
+        .tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); background: #222; }
+
+        /* RIBBON BUTTONS AREA */
+        #ribbon-content { background: var(--surface); padding: 10px; border-bottom: 1px solid var(--border); display: none; overflow-x: auto; white-space: nowrap; gap: 15px; }
+        #ribbon-content.active { display: flex; }
+        
+        .action-btn { display: inline-flex; flex-direction: column; align-items: center; gap: 5px; background: none; border: none; color: var(--text); cursor: pointer; min-width: 65px; }
+        .action-btn i { width: 20px; height: 20px; color: var(--primary); }
+        .action-btn span { font-size: 10px; }
+
+        /* GRID AREA */
+        #grid-wrapper { flex: 1; position: relative; overflow: auto; background: #fff; }
+        canvas { display: block; }
+        #cell-editor { position: absolute; display: none; border: 2px solid var(--primary); background: white; color: black; z-index: 100; font-size: 16px; padding: 5px; }
+
+        /* FOOTER */
+        #footer { height: 35px; background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; padding: 0 15px; font-size: 11px; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+    <div id="ai-header">
+        <i data-lucide="bot"></i>
+        <input type="text" id="ai-input" placeholder="E.g. 'Apply Filter to Column A' or 'Calculate Margin'...">
+    </div>
+
+    <div id="menu-tabs">
+        <div class="tab active" onclick="showMenu('file')">File</div>
+        <div class="tab" onclick="showMenu('edit')">Edit</div>
+        <div class="tab" onclick="showMenu('insert')">Insert</div>
+        <div class="tab" onclick="showMenu('formula')">Formula</div>
+        <div class="tab" onclick="showMenu('data')">Data</div>
+        <div class="tab" onclick="showMenu('view')">View</div>
+    </div>
+
+    <div id="ribbon-content" class="active">
+        <div id="menu-file" class="menu-set">
+            <button class="action-btn" onclick="alert('New Sheet Created')"><i data-lucide="file-plus"></i><span>New</span></button>
+            <button class="action-btn"><i data-lucide="folder-open"></i><span>Open</span></button>
+            <button class="action-btn" onclick="saveToCloud()"><i data-lucide="cloud-save"></i><span>Save Cloud</span></button>
+            <button class="action-btn"><i data-lucide="file-text"></i><span>Export PDF</span></button>
+            <button class="action-btn"><i data-lucide="share-2"></i><span>Share</span></button>
+        </div>
+    </div>
+
+    <div id="grid-wrapper">
+        <canvas id="main-canvas"></canvas>
+        <input type="text" id="cell-editor">
+    </div>
+
+    <div id="footer">
+        <div><span style="color:var(--primary)">MODE:</span> READY</div>
+        <div id="selection-stats">SUM: 0 | AVG: 0 | COUNT: 0</div>
+    </div>
+
+    <script>
+        // Menu Data (Sub-buttons)
+        const menuData = {
+            file: [
+                {icon: 'file-plus', label: 'New'}, {icon: 'folder-open', label: 'Open'}, 
+                {icon: 'save', label: 'Save'}, {icon: 'file-text', label: 'PDF'}, {icon: 'share-2', label: 'Share'}
+            ],
+            edit: [
+                {icon: 'undo-2', label: 'Undo'}, {icon: 'redo-2', label: 'Redo'}, 
+                {icon: 'copy', label: 'Copy'}, {icon: 'clipboard-paste', label: 'Paste Spec'}, {icon: 'search', label: 'Find'}
+            ],
+            insert: [
+                {icon: 'bar-chart-big', label: 'Chart'}, {icon: 'image', label: 'Image'}, 
+                {icon: 'check-square', label: 'Checkbox'}, {icon: 'link', label: 'Link'}
+            ],
+            formula: [
+                {icon: 'sigma', label: 'AutoSum'}, {icon: 'calculator', label: 'Financial'},
+        
           
